@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	"github.com/eduardor2m/db-metrics/src/internal/models"
-	"github.com/eduardor2m/db-metrics/src/internal/repositories/postgres"
+	"github.com/eduardor2m/db-metrics/src/internal/repositories/mongodb"
+	"github.com/go-faker/faker/v4"
 	"github.com/google/uuid"
 )
 
@@ -15,32 +16,54 @@ type Response struct {
 }
 
 type UserDTO struct {
-	Name        string   `json:"name"`
-	Email       string   `json:"email"`
-	Preferences []string `json:"preferences"`
+	Name        string `faker:"username"`
+	Email       string `faker:"email"`
+	Preferences string `faker:"word"`
 }
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	var user UserDTO
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	var usersData [3]UserDTO
 
-	fmt.Println(user)
+	faker.FakeData(&usersData)
 
-	userPostgresRepository := postgres.UserPostgresRepository{}
+	fmt.Println(usersData)
+
+	userPostgresRepository := mongodb.UserMongodbRepository{}
 
 	id := uuid.New()
-	newUserModel := models.NewUser(id, user.Name, user.Email, user.Preferences)
+	newUserModel := models.NewUser(id, usersData[1].Name, usersData[1].Email, usersData[1].Preferences)
 	fmt.Println(*newUserModel)
 	response := userPostgresRepository.Create(*newUserModel)
 
-	// response := Response{Message: "User created"}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+
+	// var user UserDTO
+	// err := json.NewDecoder(r.Body).Decode(&user)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusBadRequest)
+	// 	return
+	// }
+
+	// var usersFakerData [3]UserDTO
+
+	// faker.FakeData(&usersFakerData)
+
+	// fmt.Println(usersFakerData)
+
+	// fmt.Println(user)
+
+	// userPostgresRepository := postgres.UserPostgresRepository{}
+
+	// id := uuid.New()
+	// newUserModel := models.NewUser(id, user.Name, user.Email, user.Preferences)
+	// fmt.Println(*newUserModel)
+	// response := userPostgresRepository.Create(*newUserModel)
+
+	// // response := Response{Message: "User created"}
+
+	// w.Header().Set("Content-Type", "application/json")
+	// json.NewEncoder(w).Encode(response)
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {

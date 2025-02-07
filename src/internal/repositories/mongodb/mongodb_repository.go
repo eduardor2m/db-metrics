@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -21,6 +22,7 @@ var _ connectorManager = (*DatabaseConnectorManager)(nil)
 type DatabaseConnectorManager struct{}
 
 func (dcm *DatabaseConnectorManager) getConnection() (*mongo.Database, error) {
+	fmt.Print("to aqui")
 	var (
 		mongodbAtlasPassword = os.Getenv("MONGODB_ATLAS_PASSWORD")
 		mongodbName          = os.Getenv("MONGODB_NAME")
@@ -31,8 +33,12 @@ func (dcm *DatabaseConnectorManager) getConnection() (*mongo.Database, error) {
 		development          = os.Getenv("DEVELOPMENT")
 	)
 
+	fmt.Println("ainda", mongodbName)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
+
+	fmt.Println("oiii")
 
 	developmentBool, err := strconv.ParseBool(development)
 	if err != nil {

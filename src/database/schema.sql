@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    preferences JSONB
+    preferences VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS book (

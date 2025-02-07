@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/sqlc-dev/pqtype"
 )
 
 const createUser = `-- name: CreateUser :exec
@@ -21,7 +20,7 @@ type CreateUserParams struct {
 	ID          uuid.UUID
 	Name        string
 	Email       string
-	Preferences pqtype.NullRawMessage
+	Preferences string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {

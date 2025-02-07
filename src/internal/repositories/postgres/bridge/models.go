@@ -8,7 +8,6 @@ import (
 	"database/sql"
 
 	"github.com/google/uuid"
-	"github.com/sqlc-dev/pqtype"
 )
 
 type Book struct {
@@ -31,5 +30,5 @@ type User struct {
 	ID          uuid.UUID
 	Name        string
 	Email       string
-	Preferences pqtype.NullRawMessage
+	Preferences string
 }

@@ -2,5 +2,5 @@ CREATE TABLE IF NOT EXISTS "user" (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    prefereces JSONB
+    preferences VARCHAR(255) NOT NULL
 );

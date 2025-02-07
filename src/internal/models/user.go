@@ -6,10 +6,10 @@ type User struct {
 	id          uuid.UUID
 	name        string
 	email       string
-	preferences []string
+	preferences string
 }
 
-func NewUser(id uuid.UUID, name string, email string, preferences []string) *User {
+func NewUser(id uuid.UUID, name string, email string, preferences string) *User {
 	return &User{
 		id:          id,
 		name:        name,
@@ -30,6 +30,6 @@ func (u *User) Email() string {
 	return u.email
 }
 
-func (u *User) Preferences() []string {
+func (u *User) Preferences() string {
 	return u.preferences
 }

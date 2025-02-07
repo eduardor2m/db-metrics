@@ -6,7 +6,6 @@ import (
 
 	"github.com/eduardor2m/db-metrics/src/internal/models"
 	"github.com/eduardor2m/db-metrics/src/internal/repositories/postgres/bridge"
-	"github.com/sqlc-dev/pqtype"
 )
 
 type UserPostgresRepository struct {
@@ -15,57 +14,89 @@ type UserPostgresRepository struct {
 
 func (instance UserPostgresRepository) Create(u models.User) error {
 	conn, err := instance.getConnection()
-
 	if err != nil {
 		return fmt.Errorf("error getting connection: %v", err)
 	}
 
+	fmt.Println("conexão", conn)
 	defer instance.closeConnection(conn)
 
-	ctx := context.Background()
+	if conn == nil {
+		return fmt.Errorf("connection is nil")
+	}
 
 	queries := bridge.New(conn)
+	if queries == nil {
+		return fmt.Errorf("failed to initialize queries")
+	}
 
-	err = queries.CreateUser(ctx, bridge.CreateUserParams{
-		ID:          u.ID(),
+	// Exemplo de inserção de dados com tratamento de erros
+	err = queries.CreateUser(context.Background(), bridge.CreateUserParams{
 		Name:        u.Name(),
 		Email:       u.Email(),
-		Preferences: pqtype.NullRawMessage{Valid: true, RawMessage: []byte("[]")},
+		Preferences: u.Preferences(),
 	})
-
 	if err != nil {
-		return fmt.Errorf("error creating user: %v", err)
+		return fmt.Errorf("error inserting user: %v", err)
 	}
 
 	return nil
+	// fmt.Println("Estou aqui")
+	// conn, err := instance.getConnection()
+
+	// fmt.Println("conexão", conn)
+
+	// if err != nil {
+	// 	return fmt.Errorf("error getting connection: %v", err)
+	// }
+
+	// defer instance.closeConnection(conn)
+
+	// ctx := context.Background()
+
+	// queries := bridge.New(conn)
+
+	// fmt.Println("to aqui 2")
+
+	// err = queries.CreateUser(ctx, bridge.CreateUserParams{
+	// 	ID:          u.ID(),
+	// 	Name:        u.Name(),
+	// 	Email:       u.Email(),
+	// 	Preferences: pqtype.NullRawMessage{Valid: true, RawMessage: []byte("[]")},
+	// })
+
+	// if err != nil {
+	// 	return fmt.Errorf("error creating user: %v", err)
+	// }
+
+	// return nil
 }
 
 func (instance UserPostgresRepository) List() ([]models.User, error) {
-	conn, err := instance.getConnection()
+	// conn, err := instance.getConnection()
 
-	if err != nil {
-		return nil, fmt.Errorf("error getting connection: %v", err)
-	}
+	// if err != nil {
+	// 	return nil, fmt.Errorf("error getting connection: %v", err)
+	// }
 
-	defer instance.closeConnection(conn)
+	// defer instance.closeConnection(conn)
 
-	ctx := context.Background()
+	// ctx := context.Background()
 
-	queries := bridge.New(conn)
+	// queries := bridge.New(conn)
 
-	users, err := queries.ListUsers(ctx)
+	// users, err := queries.ListUsers(ctx)
 
-	if err != nil {
-		return nil, fmt.Errorf("error listing users: %v", err)
-	}
+	// if err != nil {
+	// 	return nil, fmt.Errorf("error listing users: %v", err)
+	// }
 
-	var result []models.User
+	// var result []models.User
 
-	for _, user := range users {
-		var preferences []string = nil
+	// for _, user := range users {
 
-		result = append(result, *models.NewUser(user.ID, user.Name, user.Email, preferences))
-	}
+	// 	result = append(result, *models.NewUser(user.ID, user.Name, user.Email, preferences))
+	// }
 
-	return result, nil
+	return nil, nil
 }
